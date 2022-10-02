@@ -1,43 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- displays site properly based on user's device -->
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  
-  <title>Frontend Mentor | Expenses chart component</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
+    <title>Frontend Mentor | Expenses chart component</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"></script>
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"
+            integrity="sha256-+8RZJua0aEWg+QVVKg4LEzEEm/8RFez5Tb4JBNiV5xA=" crossorigin="anonymous"></script>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap');
+
+        .attribution {
+            font-size: 11px;
+            text-align: center;
+            display: none
+        }
+
+        .attribution a {
+            color: hsl(228, 45%, 44%);
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .text-brown {
+            color: hsl(28, 10%, 53%);
+        }
+
+        :root {
+            --bs-primary: #EC755D;
+            --bs-primary-rgb: 236, 117, 93;
+            --bs-secondary: #f7e9dc;
+            --bs-secondary-rgb: 247, 233, 220;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-secondary">
 
-  My balance
-  $921.48
+<main class="d-flex flex-column gap-4">
+    <section class="bg-primary text-white p-3 d-flex justify-content-between flex-row rounded">
+        <div class="d-flex flex-column justify-content-between gap-1">
+            <h1 class="h6">My balance</h1>
+            <div class="fw-bold h4">$921.48</div>
+        </div>
+        <img class="h-auto w-auto" src="images/logo.svg" alt="logo">
+    </section>
+    <section class="bg-white rounded p-3">
+        <h2 class="h4 fw-bold">Spending - Last 7 days</h2>
 
-  Spending - Last 7 days
+        <canvas id="myChart" width="300" height="250"></canvas>
 
-  mon
-  tue
-  wed
-  thu
-  fri
-  sat
-  sun
+        <hr class="border-primary border-top border-2">
 
-  Total this month
-  $478.33
+        <div>
+            <div>
+                <h3 class="h6 text-brown">Total this month</h3>
+                <div class="d-flex justify-content-between">
+                    <div class="h3 fw-bold">
+                        $478.33
+                    </div>
+                    <div>
+                        <div class="text-end fw-bold">
+                            +2.4%
+                        </div>
+                        <div class="text-brown">
+                            from last month
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  +2.4%
-  from last month
-  
-  <div class="attribution">
-    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+        </div>
+
+
+    </section>
+</main>
+
+
+<div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
     Coded by <a href="#">Your Name Here</a>.
-  </div>
+</div>
 </body>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let data, labels = []
+    fetch('data.json').then((r) => r.json()).then(json => {
+        data = json.map(e => e.amount)
+        labels = json.map(e => e.day)
+
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    borderRadius: 5,
+                    data,
+                    backgroundColor: [
+                        '#eb755d',
+                        '#eb755d',
+                        '#75b5bc',
+                        '#eb755d',
+                        '#eb755d',
+                        '#eb755d'
+                    ],
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    })
+</script>
 </html>
